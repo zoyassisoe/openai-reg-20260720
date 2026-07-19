@@ -32,6 +32,11 @@ const state = {
   proxyPoolClearRequested: false,
   page: 1,
   pageSize: 20,
+  groups: [],
+  plans: [],
+  groupFilter: "all",
+  archiveFilter: "active",
+  noteSaveTimers: {},
 };
 
 const STATUS_LABELS = {
@@ -661,15 +666,125 @@ function statusMatches(job, filter) {
   return job.status === filter;
 }
 
+function jobGroupName(job) {
+  return String(job?.group || "").trim() || "未分组";
+}
+
+function jobPlanType(job) {
+  return String(job?.planType || "").trim().toLowerCase() || "unknown";
+}
+
+function planPill(plan) {
+  const value = String(plan || "unknown").trim().toLowerCase() || "unknown";
+  const cls = value.replace(/[^a-z0-9_]+/g, "_") || "unknown";
+  return `<span class="plan-pill ${escapeHtml(cls)}">${escapeHtml(value)}</span>`;
+}
+
 function filteredJobs() {
   const search = $("#searchInput").value.trim().toLowerCase();
   const status = $("#statusFilter").value;
   const mode = $("#modeFilter").value;
+  const plan = $("#planFilter")?.value || "";
   return state.jobs.filter((job) => {
-    return (!search || job.email.toLowerCase().includes(search))
+    const archived = Boolean(job.archived);
+    if (state.archiveFilter === "active" && archived) return false;
+    if (state.archiveFilter === "archived" && !archived) return false;
+    if (state.groupFilter === "ungrouped" && jobGroupName(job) !== "未分组") return false;
+    if (state.groupFilter !== "all" && state.groupFilter !== "ungrouped" && jobGroupName(job) !== state.groupFilter) return false;
+    const haystack = [
+      job.email,
+      job.fullName,
+      job.note,
+      jobGroupName(job),
+      jobPlanType(job),
+    ].join(" ").toLowerCase();
+    return (!search || haystack.includes(search))
       && statusMatches(job, status)
-      && (!mode || job.provider.mode === mode);
+      && (!mode || job.provider?.mode === mode)
+      && (!plan || jobPlanType(job) === plan);
   });
+}
+
+function renderGroups() {
+  const list = $("#groupList");
+  if (!list) return;
+  const total = state.jobs.length;
+  const active = state.jobs.filter((job) => !job.archived).length;
+  const archived = state.jobs.filter((job) => job.archived).length;
+  const ungrouped = state.jobs.filter((job) => jobGroupName(job) === "未分组").length;
+  const items = [
+    { key: "all", label: "全部账户", count: total, kind: "scope" },
+    { key: "active", label: "未归档", count: active, kind: "archive" },
+    { key: "archived", label: "已归档", count: archived, kind: "archive" },
+    { key: "ungrouped", label: "未分组", count: ungrouped, kind: "group" },
+    ...((state.groups || []).filter((item) => item.name && item.name !== "未分组").map((item) => ({
+      key: item.name,
+      label: item.name,
+      count: item.count,
+      kind: "group",
+    }))),
+  ];
+  list.innerHTML = items.map((item) => {
+    let activeItem = false;
+    if (item.kind === "scope") activeItem = state.groupFilter === "all" && state.archiveFilter === "active";
+    if (item.kind === "archive") activeItem = state.archiveFilter === item.key && state.groupFilter === "all";
+    if (item.kind === "group") activeItem = state.groupFilter === item.key;
+    return `<button type="button" class="group-item ${activeItem ? "active" : ""}" data-group-key="${escapeHtml(item.key)}" data-group-kind="${escapeHtml(item.kind)}"><span>${escapeHtml(item.label)}</span><span class="count">${escapeHtml(item.count)}</span></button>`;
+  }).join("");
+}
+
+async function updateJobsMeta(ids, changes, { silent = false } = {}) {
+  const targetIds = (ids || []).map((value) => String(value || "")).filter(Boolean);
+  if (!targetIds.length) {
+    if (!silent) showToast("请先选择任务", true);
+    return null;
+  }
+  const result = await api("/api/jobs/meta", {
+    method: "POST",
+    body: JSON.stringify({ ids: targetIds, ...changes }),
+  });
+  await refreshState();
+  if (!silent) {
+    const updated = Number(result.updated || 0);
+    showToast(`已更新 ${updated} 个账号`);
+  }
+  return result;
+}
+
+async function archiveSelected(archived = true) {
+  const ids = Array.from(state.selected);
+  if (!ids.length) {
+    showToast("请先选择任务", true);
+    return;
+  }
+  await updateJobsMeta(ids, { archived: Boolean(archived) });
+  state.selected.clear();
+}
+
+async function assignGroupSelected(groupName) {
+  const ids = Array.from(state.selected);
+  if (!ids.length) {
+    showToast("请先选择任务", true);
+    return;
+  }
+  const name = String(groupName || "").trim();
+  await updateJobsMeta(ids, { group: name });
+  if (name) {
+    state.groupFilter = name;
+    state.archiveFilter = "all";
+  }
+  state.selected.clear();
+}
+
+function scheduleNoteSave(jobId, note) {
+  if (state.noteSaveTimers[jobId]) clearTimeout(state.noteSaveTimers[jobId]);
+  state.noteSaveTimers[jobId] = setTimeout(async () => {
+    try {
+      await updateJobsMeta([jobId], { note: String(note || "") }, { silent: true });
+    } catch (error) {
+      showToast(error.message || "备注保存失败", true);
+    }
+  }, 450);
 }
 
 function visibleJobs() {
@@ -745,11 +860,25 @@ function updateSelectionUi() {
   exportRtButton.title = rtJobs.length
     ? (count ? `导出所选 ${rtJobs.length} 个已绑号账号的 Sub2API RT JSON` : `导出全部 ${rtJobs.length} 个已绑号账号的 Sub2API RT JSON`)
     : "没有可导出 RT 的已绑号账号";
+  const archiveButton = $("#archiveSelectedBtn");
+  const groupButton = $("#groupSelectedBtn");
+  const selectedArchivedCount = selectedJobs.filter((job) => job.archived).length;
+  const archiveMode = count > 0 && selectedArchivedCount === count;
+  $("#archiveSelectedLabel").textContent = archiveMode ? `取消归档 (${count})` : (count ? `归档 (${count})` : "归档");
+  archiveButton.disabled = count === 0;
+  archiveButton.title = count
+    ? (archiveMode ? `取消归档所选 ${count} 个账号` : `归档所选 ${count} 个账号`)
+    : "请先选择任务";
+  archiveButton.dataset.mode = archiveMode ? "unarchive" : "archive";
+  groupButton.disabled = count === 0;
+  groupButton.title = count ? `为所选 ${count} 个账号设置分类` : "请先选择任务";
+  $("#createGroupBtn").disabled = count === 0;
   $("#deleteSelectedBtn").disabled = count === 0 || Boolean(state.runtime.running);
   $("#deleteSelectedBtn").title = count ? `删除所选 ${count} 个任务` : "请先选择任务";
 }
 
 function renderJobs() {
+  renderGroups();
   const filtered = filteredJobs();
   const totalPages = Math.max(1, Math.ceil(filtered.length / state.pageSize));
   if (state.page > totalPages) state.page = totalPages;
@@ -757,7 +886,7 @@ function renderJobs() {
   const jobs = visibleJobs();
   const rows = $("#jobRows");
   if (!jobs.length) {
-    rows.innerHTML = '<tr><td colspan="10" class="empty-row">暂无符合条件的任务</td></tr>';
+    rows.innerHTML = '<tr><td colspan="13" class="empty-row">暂无符合条件的任务</td></tr>';
     renderPagination(filtered.length);
     updateSelectionUi();
     return;
@@ -768,9 +897,10 @@ function renderJobs() {
     const actions = [
       retryable ? `<button class="row-button" type="button" data-action="retry" data-id="${escapeHtml(job.id)}">重试</button>` : "",
       canView ? `<button class="row-button" type="button" data-action="credentials" data-id="${escapeHtml(job.id)}">凭据</button>` : "",
-      `<button class="row-button" type="button" data-action="email-otp" data-id="${escapeHtml(job.id)}">取邮箱码</button>`,
-      job.registrationStatus === "registered" ? `<button class="row-button" type="button" data-action="refresh-at" data-id="${escapeHtml(job.id)}">刷新 AT</button>` : "",
-      `<button class="row-button delete-row-button" type="button" data-action="delete" data-id="${escapeHtml(job.id)}">删除</button>`,
+      `<button class="row-button" type="button" data-action="email-otp" data-id="${escapeHtml(job.id)}">邮箱码</button>`,
+      job.registrationStatus === "registered" ? `<button class="row-button" type="button" data-action="refresh-at" data-id="${escapeHtml(job.id)}">AT</button>` : "",
+      `<button class="row-button" type="button" data-action="toggle-archive" data-id="${escapeHtml(job.id)}">${job.archived ? "取消归档" : "归档"}</button>`,
+      `<button class="row-button delete-row-button" type="button" data-action="delete" data-id="${escapeHtml(job.id)}">删</button>`,
     ].join("");
     const checked = state.selected.has(job.id) ? "checked" : "";
     const stage = STAGE_LABELS[job.stage] || job.stage || "-";
@@ -779,16 +909,21 @@ function renderJobs() {
     const displayError = ["phone_failed", "phone_stopped"].includes(currentPhoneStatus) && job.phoneError
       ? job.phoneError
       : job.error;
+    const groupName = jobGroupName(job);
+    const plan = jobPlanType(job);
     return `
-      <tr>
+      <tr class="${job.archived ? "archived-row" : ""}">
         <td class="check-cell"><input type="checkbox" data-select="${escapeHtml(job.id)}" aria-label="选择 ${escapeHtml(job.email)}" ${checked}></td>
-        <td class="email-cell" title="${escapeHtml(job.email)}"><strong>${escapeHtml(job.email)}</strong><small>${escapeHtml(job.fullName || "-")}</small></td>
-        <td><strong>${escapeHtml(job.provider.label)}</strong><div class="endpoint-cell" title="${escapeHtml(job.provider.endpoint)}">${escapeHtml(job.provider.endpoint || "-")}</div><div class="proxy-cell" title="${escapeHtml(job.proxyLabel || "")}">${escapeHtml(job.proxyLabel || "")}</div></td>
+        <td class="email-cell" title="${escapeHtml(job.email)}"><strong>${escapeHtml(job.email)}</strong><small>${escapeHtml(job.fullName || "-")}${job.archived ? " · 已归档" : ""}</small></td>
+        <td title="${escapeHtml(job.planUpdatedAt ? `更新：${job.planUpdatedAt}` : "套餐未知")}">${planPill(plan)}</td>
+        <td><span class="group-tag" title="${escapeHtml(groupName)}">${escapeHtml(groupName)}</span></td>
+        <td><input class="note-input" data-note-id="${escapeHtml(job.id)}" value="${escapeHtml(job.note || "")}" placeholder="添加备注" maxlength="200"></td>
+        <td title="${escapeHtml((job.provider?.label || '') + ' ' + (job.provider?.endpoint || '') + ' ' + (job.proxyLabel || ''))}"><strong>${escapeHtml(job.provider?.label || "-")}</strong><div class="endpoint-cell">${escapeHtml(job.provider?.endpoint || "-")}</div></td>
         <td title="注册：${escapeHtml(STATUS_LABELS[job.registrationStatus] || job.registrationStatus || "-")}；2FA：${escapeHtml(STATUS_LABELS[job.mfaStatus] || job.mfaStatus || "-")}">${pill(combinedRegistrationStatus(job))}</td>
         <td title="${escapeHtml(job.atExpiresAt ? `过期：${job.atExpiresAt}` : job.atError || "")}">${pill(job.atStatus || "missing")}</td>
         <td class="phone-cell" title="${escapeHtml(job.phoneError || phoneMasked)}">${pill(currentPhoneStatus)}${phoneMasked ? `<small>${escapeHtml(phoneMasked)}</small>` : ""}</td>
-        <td>${escapeHtml(stage)}</td>
-        <td>${formatElapsed(job.elapsedSeconds)}</td>
+        <td class="stage-cell" title="${escapeHtml(stage)}">${escapeHtml(stage)}</td>
+        <td class="elapsed-cell">${formatElapsed(job.elapsedSeconds)}</td>
         <td class="error-cell" title="${escapeHtml(displayError)}">${escapeHtml(displayError || "-")}</td>
         <td class="action-cell">${actions || "-"}</td>
       </tr>`;
@@ -799,10 +934,12 @@ function renderJobs() {
 
 function renderMetrics(counts) {
   $("#totalCount").textContent = counts.total || 0;
+  if ($("#activeCount")) $("#activeCount").textContent = counts.active ?? Math.max(0, Number(counts.total || 0) - Number(counts.archived || 0));
   $("#queuedCount").textContent = counts.queued || 0;
   $("#runningCount").textContent = counts.running || 0;
   $("#readyCount").textContent = counts.ready || 0;
   $("#failedCount").textContent = counts.failed || 0;
+  if ($("#archivedCount")) $("#archivedCount").textContent = counts.archived || 0;
 }
 
 function renderRuntime(runtime) {
@@ -862,6 +999,8 @@ async function refreshState() {
     const payload = await api("/api/state");
     const previousRuntime = state.runtime;
     state.jobs = payload.jobs || [];
+    state.groups = payload.groups || [];
+    state.plans = payload.plans || [];
     const currentIds = new Set(state.jobs.map((job) => job.id));
     state.selected.forEach((id) => { if (!currentIds.has(id)) state.selected.delete(id); });
     state.runtime = payload.runtime || {};
@@ -1552,11 +1691,49 @@ function bindEvents() {
     updateManualPhoneControls();
   });
   $("#deleteSelectedBtn").addEventListener("click", () => deleteJobs());
+  $("#archiveSelectedBtn").addEventListener("click", () => {
+    const mode = $("#archiveSelectedBtn").dataset.mode || "archive";
+    archiveSelected(mode !== "unarchive");
+  });
+  $("#groupSelectedBtn").addEventListener("click", async () => {
+    const name = window.prompt("输入分类名（留空=移出分类）", "");
+    if (name === null) return;
+    await assignGroupSelected(name);
+  });
+  $("#createGroupBtn").addEventListener("click", async () => {
+    const name = $("#newGroupInput").value.trim();
+    if (!name) {
+      showToast("请输入分类名", true);
+      return;
+    }
+    await assignGroupSelected(name);
+    $("#newGroupInput").value = "";
+  });
+  $("#groupList").addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-group-key]");
+    if (!button) return;
+    const key = button.dataset.groupKey;
+    const kind = button.dataset.groupKind;
+    if (kind === "scope") {
+      state.groupFilter = "all";
+      state.archiveFilter = "active";
+    } else if (kind === "archive") {
+      state.groupFilter = "all";
+      state.archiveFilter = key;
+    } else {
+      state.groupFilter = key;
+      if (state.archiveFilter === "active") state.archiveFilter = "all";
+    }
+    state.page = 1;
+    state.selected.clear();
+    renderJobs();
+  });
   $("#exportBtn").addEventListener("click", () => { window.location.href = "/api/export"; });
   $("#exportRtBtn").addEventListener("click", exportRtSelected);
   $("#searchInput").addEventListener("input", () => { state.page = 1; state.selected.clear(); renderJobs(); });
   $("#statusFilter").addEventListener("change", () => { state.page = 1; state.selected.clear(); renderJobs(); });
   $("#modeFilter").addEventListener("change", () => { state.page = 1; state.selected.clear(); renderJobs(); });
+  $("#planFilter").addEventListener("change", () => { state.page = 1; state.selected.clear(); renderJobs(); });
   $("#pageSize").addEventListener("change", (event) => {
     state.pageSize = Number(event.target.value || 20);
     state.page = 1;
@@ -1575,9 +1752,16 @@ function bindEvents() {
   });
   $("#jobRows").addEventListener("change", (event) => {
     const id = event.target.dataset.select;
-    if (!id) return;
-    event.target.checked ? state.selected.add(id) : state.selected.delete(id);
-    updateSelectionUi();
+    if (id) {
+      event.target.checked ? state.selected.add(id) : state.selected.delete(id);
+      updateSelectionUi();
+      return;
+    }
+  });
+  $("#jobRows").addEventListener("input", (event) => {
+    const noteId = event.target.dataset.noteId;
+    if (!noteId) return;
+    scheduleNoteSave(noteId, event.target.value);
   });
   $("#jobRows").addEventListener("click", (event) => {
     const button = event.target.closest("button[data-action]");
@@ -1593,6 +1777,10 @@ function bindEvents() {
     if (button.dataset.action === "credentials") loadCredentials(button.dataset.id);
     if (button.dataset.action === "email-otp") loadEmailOtp(button.dataset.id);
     if (button.dataset.action === "refresh-at") refreshAccessTokens([button.dataset.id]);
+    if (button.dataset.action === "toggle-archive") {
+      const job = state.jobs.find((item) => item.id === button.dataset.id);
+      updateJobsMeta([button.dataset.id], { archived: !Boolean(job?.archived) });
+    }
     if (button.dataset.action === "delete") deleteJobs([button.dataset.id]);
   });
   $("#logToggle").addEventListener("click", () => {

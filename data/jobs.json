@@ -17,7 +17,7 @@
     "secretMasked": "GBEY************************HPFM",
     "localSecretPresent": true,
     "createdAt": "2026-07-14T10:01:08Z",
-    "updatedAt": "2026-07-19T04:00:28Z",
+    "updatedAt": "2026-07-19T17:42:09Z",
     "startedTs": 1784023337.1451335,
     "finishedTs": 1784023365.276123,
     "storageStatePath": "/app/data/x9/登录态/socrates-aliannahio@outlook.com.json",
@@ -43,7 +43,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "test-note",
+    "group": "测试组",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784023268693-97a69c2a",
@@ -90,7 +95,12 @@
     "rtPresent": true,
     "rtError": "",
     "rtUpdatedAt": "2026-07-19T15:32:44Z",
-    "successCredentialPath": "/app/data/x9/成功凭证/rilynn.ojf-lorey@outlook.com.json"
+    "successCredentialPath": "/app/data/x9/成功凭证/rilynn.ojf-lorey@outlook.com.json",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "plus",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784297794487-ddb52bbc",
@@ -139,7 +149,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463733-3e89b106",
@@ -185,7 +200,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463733-7e0fdfd4",
@@ -234,7 +254,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463733-979d51bf",
@@ -280,7 +305,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463733-eaf21075",
@@ -326,7 +356,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463733-32576e76",
@@ -373,7 +408,12 @@
     "rtPresent": true,
     "rtError": "",
     "rtUpdatedAt": "2026-07-19T15:32:44Z",
-    "successCredentialPath": "/app/data/x9/成功凭证/yaileneraneen4292@outlook.com.json"
+    "successCredentialPath": "/app/data/x9/成功凭证/yaileneraneen4292@outlook.com.json",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "plus",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463733-92fd4f8e",
@@ -420,7 +460,12 @@
     "rtPresent": true,
     "rtError": "",
     "rtUpdatedAt": "2026-07-19T15:32:44Z",
-    "successCredentialPath": "/app/data/x9/成功凭证/terrinavalenteoh@outlook.com.json"
+    "successCredentialPath": "/app/data/x9/成功凭证/terrinavalenteoh@outlook.com.json",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "plus",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463733-c70c6ca6",
@@ -466,7 +511,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-78b194d0",
@@ -510,7 +560,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "",
+    "planUpdatedAt": ""
   },
   {
     "id": "1784303463734-5fbb2a82",
@@ -556,7 +611,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-d06e95b5",
@@ -605,7 +665,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-55102058",
@@ -654,7 +719,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-4de2f16d",
@@ -701,7 +771,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-c01b76c7",
@@ -750,7 +825,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-b266925b",
@@ -799,7 +879,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-ad56c0dc",
@@ -849,7 +934,12 @@
     "rtPresent": true,
     "rtError": "",
     "rtUpdatedAt": "2026-07-19T15:32:44Z",
-    "successCredentialPath": "/app/data/x9/成功凭证/mylohsekrystyn@outlook.com.json"
+    "successCredentialPath": "/app/data/x9/成功凭证/mylohsekrystyn@outlook.com.json",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "plus",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-6aadc4d4",
@@ -898,7 +988,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-ba338ef7",
@@ -947,7 +1042,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-3bdc1ab7",
@@ -993,7 +1093,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-366af2e0",
@@ -1039,7 +1144,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-6cff52e0",
@@ -1085,7 +1195,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-49750a0d",
@@ -1132,7 +1247,12 @@
     "rtPresent": true,
     "rtError": "",
     "rtUpdatedAt": "2026-07-19T15:32:44Z",
-    "successCredentialPath": "/app/data/x9/成功凭证/anjelosqmelly@outlook.com.json"
+    "successCredentialPath": "/app/data/x9/成功凭证/anjelosqmelly@outlook.com.json",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-44247600",
@@ -1181,7 +1301,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-76f403df",
@@ -1230,7 +1355,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-672f5ad6",
@@ -1279,7 +1409,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-ccd8c956",
@@ -1328,7 +1463,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-dd76a7f0",
@@ -1377,7 +1517,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-76ccc942",
@@ -1426,7 +1571,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-4f3f6ba4",
@@ -1475,7 +1625,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-0a062518",
@@ -1523,7 +1678,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-1283c3c9",
@@ -1572,7 +1732,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-b1185045",
@@ -1620,7 +1785,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-d3e01900",
@@ -1668,7 +1838,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-f3780705",
@@ -1717,7 +1892,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-292ceab4",
@@ -1766,7 +1946,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-c1b69743",
@@ -1814,7 +1999,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-bb1dd200",
@@ -1863,7 +2053,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-a27a9734",
@@ -1913,7 +2108,12 @@
     "rtPresent": true,
     "rtError": "",
     "rtUpdatedAt": "2026-07-19T15:32:44Z",
-    "successCredentialPath": "/app/data/x9/成功凭证/jenisharudi8553@outlook.com.json"
+    "successCredentialPath": "/app/data/x9/成功凭证/jenisharudi8553@outlook.com.json",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "plus",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-ce9fc268",
@@ -1962,7 +2162,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-a569f0cf",
@@ -2010,7 +2215,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-2a07b71c",
@@ -2059,7 +2269,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-e032a2a8",
@@ -2108,7 +2323,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-a024673a",
@@ -2157,7 +2377,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-d976c59b",
@@ -2205,7 +2430,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-77931392",
@@ -2254,7 +2484,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-d34e687e",
@@ -2302,7 +2537,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-0f6000e2",
@@ -2350,7 +2590,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463734-b8ef6c73",
@@ -2399,7 +2644,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-d462abd7",
@@ -2448,7 +2698,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-8cdf4775",
@@ -2496,7 +2751,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-296e79e7",
@@ -2545,7 +2805,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-32fe3068",
@@ -2593,7 +2858,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-6691dc1c",
@@ -2642,7 +2912,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-7fba079f",
@@ -2691,7 +2966,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-776b69e5",
@@ -2740,7 +3020,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-3cd08f9a",
@@ -2789,7 +3074,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-fea4e5d7",
@@ -2838,7 +3128,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-7f766017",
@@ -2886,7 +3181,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-91b1ab27",
@@ -2935,7 +3235,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-7175b3eb",
@@ -2984,7 +3289,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-e08678fa",
@@ -3033,7 +3343,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-c6bed4ec",
@@ -3082,7 +3397,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-a332e0c8",
@@ -3130,7 +3450,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-e942cabf",
@@ -3178,7 +3503,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-a343b366",
@@ -3226,7 +3556,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-30ac54fe",
@@ -3275,7 +3610,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-4f22b76d",
@@ -3324,7 +3664,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-8f615968",
@@ -3373,7 +3718,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-bf554872",
@@ -3422,7 +3772,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-57ab0d08",
@@ -3471,7 +3826,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-94f1dbe0",
@@ -3519,7 +3879,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-96882212",
@@ -3568,7 +3933,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-17b4ad91",
@@ -3616,7 +3986,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-13a66daa",
@@ -3665,7 +4040,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-bf88d4e7",
@@ -3714,7 +4094,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-d5f5d02c",
@@ -3763,7 +4148,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-6010fb4d",
@@ -3812,7 +4202,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-34be8452",
@@ -3861,7 +4256,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-672a353f",
@@ -3909,7 +4309,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-65c13e11",
@@ -3957,7 +4362,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-bd7f680e",
@@ -4005,7 +4415,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-2adbe445",
@@ -4054,7 +4469,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-83fd6fe2",
@@ -4102,7 +4522,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-808900ac",
@@ -4150,7 +4575,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-513a3214",
@@ -4199,7 +4629,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-912de7e2",
@@ -4243,7 +4678,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "",
+    "planUpdatedAt": ""
   },
   {
     "id": "1784303463735-7fe81d37",
@@ -4291,7 +4731,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463735-7d20214e",
@@ -4335,7 +4780,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "",
+    "planUpdatedAt": ""
   },
   {
     "id": "1784303463735-07794973",
@@ -4384,7 +4834,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463736-8baacd69",
@@ -4432,7 +4887,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463736-a24aeac5",
@@ -4476,7 +4936,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "",
+    "planUpdatedAt": ""
   },
   {
     "id": "1784303463736-660fe936",
@@ -4525,7 +4990,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463736-ad65612f",
@@ -4573,7 +5043,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463736-0402ed9b",
@@ -4613,7 +5088,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "",
+    "planUpdatedAt": ""
   },
   {
     "id": "1784303463736-67760a0e",
@@ -4653,7 +5133,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "",
+    "planUpdatedAt": ""
   },
   {
     "id": "1784303463736-a6856450",
@@ -4693,7 +5178,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "",
+    "planUpdatedAt": ""
   },
   {
     "id": "1784303463736-11da5746",
@@ -4742,7 +5232,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784303463736-aa7ad88f",
@@ -4786,7 +5281,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "",
+    "planUpdatedAt": ""
   },
   {
     "id": "1784448541591-750cf07a",
@@ -4835,7 +5335,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784448541592-9d8340dc",
@@ -4884,7 +5389,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784454930747-702d6e0e",
@@ -4933,7 +5443,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784454930748-50ec8995",
@@ -4983,7 +5498,12 @@
     "rtPresent": true,
     "rtError": "",
     "rtUpdatedAt": "2026-07-19T15:32:44Z",
-    "successCredentialPath": "/app/data/x9/成功凭证/espositoarmstrong1508+aa@gmail.com.json"
+    "successCredentialPath": "/app/data/x9/成功凭证/espositoarmstrong1508+aa@gmail.com.json",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "plus",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784454930748-651860b5",
@@ -5032,7 +5552,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784454930748-ed95a4f7",
@@ -5081,7 +5606,12 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784454930748-e6b7978b",
@@ -5130,7 +5660,12 @@
     "atPath": "/app/data/x9/AT文本/christianbrewer46530+cc@gmail.com.txt",
     "tracePath": "/app/X9-Free/_credential_toolcore/tmp/chatgpt_http_login_debug/chatgpt_http_login_20260719_234414_037825_christianbrewer46530_cc@gmail.com_35225af8.jsonl",
     "atError": "",
-    "factorId": "6a5cf177abb88191aea78049892f874b"
+    "factorId": "6a5cf177abb88191aea78049892f874b",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "free",
+    "planUpdatedAt": "2026-07-19T17:42:06Z"
   },
   {
     "id": "1784454930749-387b9382",
@@ -5170,6 +5705,11 @@
     "rtStatus": "missing",
     "rtPresent": false,
     "rtError": "",
-    "rtUpdatedAt": ""
+    "rtUpdatedAt": "",
+    "note": "",
+    "group": "",
+    "archived": false,
+    "planType": "",
+    "planUpdatedAt": ""
   }
 ]

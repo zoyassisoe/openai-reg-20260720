@@ -1366,6 +1366,81 @@ oauth@outlook.com,outlook_oauth,,,oauth@outlook.com,,client-id,refresh-token
             ),
         )
 
+    def test_jobs_meta_supports_note_group_and_archive(self):
+        server.import_jobs({"mode": "api", "text": "user@example.com----https://mail.test/latest"})
+        raw_job = server.load_jobs()[0]
+        result = server.update_jobs_meta(
+            [raw_job["id"]],
+            changes={"note": "重点号", "group": "A批", "archived": True},
+        )
+        job = server.public_job(server.get_job(raw_job["id"]))
+        payload = server.state_payload()
+
+        self.assertEqual(result["updated"], 1)
+        self.assertEqual(job["note"], "重点号")
+        self.assertEqual(job["group"], "A批")
+        self.assertTrue(job["archived"])
+        self.assertEqual(payload["counts"]["archived"], 1)
+        self.assertTrue(any(item["name"] == "A批" for item in payload["groups"]))
+
+    def test_plan_type_prefers_session_summary_account_plan(self):
+        server.import_jobs({"mode": "api", "text": "user@example.com----https://mail.test/latest"})
+        raw_job = server.load_jobs()[0]
+        state_path = server.X9_RUNTIME_ROOT / "登录态" / "user@example.com.json"
+        server.write_json_atomic(
+            state_path,
+            {
+                "accessToken": "not-a-jwt",
+                "session_summary": {
+                    "accountPlanType": "plus",
+                    "accountStructure": "personal",
+                    "updatedAt": "2026-07-20T00:00:00Z",
+                },
+            },
+        )
+        server.update_job(raw_job["id"], storageStatePath=str(state_path), planType="free")
+        job = server.get_job(raw_job["id"])
+        plan = server.extract_plan_type_from_job(job, prefer_cached=False)
+        self.assertEqual(plan, "plus")
+        public = server.public_job(job)
+        self.assertEqual(public["planType"], "plus")
+
+    def test_plan_type_prefers_newer_success_credential_over_stale_session(self):
+        server.import_jobs({"mode": "api", "text": "user@example.com----https://mail.test/latest"})
+        raw_job = server.load_jobs()[0]
+        state_path = server.X9_RUNTIME_ROOT / "登录态" / "user@example.com.json"
+        success_path = server.X9_RUNTIME_ROOT / "成功凭证" / "user@example.com.json"
+        server.write_json_atomic(
+            state_path,
+            {
+                "accessToken": "not-a-jwt",
+                "session_summary": {
+                    "accountPlanType": "free",
+                    "updatedAt": "2026-07-19T00:00:00Z",
+                },
+            },
+        )
+        server.write_json_atomic(
+            success_path,
+            {
+                "type": "codex",
+                "email": "user@example.com",
+                "access_token": "not-a-jwt",
+                "refresh_token": "rt.1.example",
+                "chatgpt_plan_type": "plus",
+                "last_refresh": "2026-07-20T00:00:00Z",
+            },
+        )
+        server.update_job(
+            raw_job["id"],
+            storageStatePath=str(state_path),
+            successCredentialPath=str(success_path),
+            planType="free",
+        )
+        job = server.get_job(raw_job["id"])
+        plan = server.extract_plan_type_from_job(job, prefer_cached=False)
+        self.assertEqual(plan, "plus")
+
     def test_export_rt_defaults_to_sub2api_for_phone_bound_accounts(self):
         server.import_jobs({"mode": "api", "text": "user@example.com----https://mail.test/latest"})
         raw_job = server.load_jobs()[0]

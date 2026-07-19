@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <title>账号操作台</title>
-  <link rel="stylesheet" href="styles.css?v=10">
+  <link rel="stylesheet" href="styles.css?v=13">
 </head>
 <body>
   <header class="app-header">
@@ -25,10 +25,12 @@
 
   <section class="metrics" aria-label="任务统计">
     <div><strong id="totalCount">0</strong><span>任务总数</span></div>
+    <div><strong id="activeCount">0</strong><span>未归档</span></div>
     <div><strong id="queuedCount">0</strong><span>等待运行</span></div>
     <div><strong id="runningCount">0</strong><span>处理中</span></div>
     <div><strong id="readyCount">0</strong><span>已完成</span></div>
     <div><strong id="failedCount">0</strong><span>需处理</span></div>
+    <div><strong id="archivedCount">0</strong><span>已归档</span></div>
   </section>
 
   <main class="workspace">
@@ -217,7 +219,7 @@
       <div class="section-heading queue-heading">
         <div><span class="section-index">04</span><h2 id="queueTitle">注册任务</h2></div>
         <div class="queue-tools">
-          <input id="searchInput" class="search-input" type="search" placeholder="搜索邮箱">
+          <input id="searchInput" class="search-input" type="search" placeholder="搜索邮箱 / 备注 / 分类">
           <select id="statusFilter" aria-label="状态筛选">
             <option value="">全部状态</option>
             <option value="queued">等待运行</option>
@@ -231,20 +233,40 @@
             <option value="imap">IMAP</option>
             <option value="outlook_oauth">Outlook</option>
           </select>
+          <select id="planFilter" aria-label="套餐筛选">
+            <option value="">全部套餐</option>
+            <option value="free">free</option>
+            <option value="plus">plus</option>
+            <option value="unknown">未知</option>
+          </select>
           <button id="refreshAtBtn" class="icon-command" type="button" title="为所选账号获取最新 AT" disabled><span aria-hidden="true">↻</span><span>刷新 AT</span></button>
           <button id="bindPhoneSelectedBtn" class="icon-command" type="button" title="请先选择任务" disabled><span aria-hidden="true">☎</span><span id="bindPhoneSelectedLabel">批量绑手机</span></button>
+          <button id="archiveSelectedBtn" class="icon-command" type="button" title="归档所选任务" disabled><span aria-hidden="true">▣</span><span id="archiveSelectedLabel">归档</span></button>
+          <button id="groupSelectedBtn" class="icon-command" type="button" title="为所选任务设置分类" disabled><span aria-hidden="true">☰</span><span>设分类</span></button>
           <button id="deleteSelectedBtn" class="icon-command danger-command" type="button" title="删除所选任务" disabled><span aria-hidden="true">×</span><span>删除所选</span></button>
           <button id="exportBtn" class="icon-command" type="button" title="导出 email、password、url、2FA Secret 和 AT"><span aria-hidden="true">↓</span><span>导出凭据</span></button>
           <button id="exportRtBtn" class="icon-command" type="button" title="导出已绑号账号的 Sub2API RT JSON（默认）"><span aria-hidden="true">⤓</span><span id="exportRtLabel">导出 RT</span></button>
           <button id="clearBtn" class="icon-command" type="button" title="清理失败、停止和中断任务"><span aria-hidden="true">×</span><span>清理异常</span></button>
         </div>
       </div>
-      <div class="table-shell">
+      <div class="queue-layout">
+        <aside class="group-sidebar" aria-label="账户分类">
+          <div class="group-sidebar-title">分类</div>
+          <div id="groupList" class="group-list"></div>
+          <div class="group-sidebar-actions">
+            <input id="newGroupInput" type="text" maxlength="40" placeholder="新分类名" autocomplete="off">
+            <button id="createGroupBtn" class="button secondary" type="button">新建并归入</button>
+          </div>
+        </aside>
+        <div class="table-shell">
         <table>
           <thead>
             <tr>
               <th class="check-cell"><input id="selectAll" type="checkbox" aria-label="全选当前页" title="全选当前页"></th>
               <th>邮箱</th>
+              <th>套餐</th>
+              <th>分类</th>
+              <th>备注</th>
               <th>取码方式</th>
               <th>注册 + 2FA</th>
               <th>AT</th>
@@ -255,8 +277,9 @@
               <th class="action-cell">操作</th>
             </tr>
           </thead>
-          <tbody id="jobRows"><tr><td colspan="10" class="empty-row">暂无任务</td></tr></tbody>
+          <tbody id="jobRows"><tr><td colspan="13" class="empty-row">暂无任务</td></tr></tbody>
         </table>
+        </div>
       </div>
       <div class="pagination-bar">
         <span id="pageSummary">0 条任务</span>
@@ -378,6 +401,6 @@
   </dialog>
 
   <div id="toast" class="toast" role="status"></div>
-  <script src="app.js?v=10"></script>
+  <script src="app.js?v=12"></script>
 </body>
 </html>

@@ -1045,6 +1045,171 @@ def at_job_fields(token: str, *, updated_at: str = "", source: str = "") -> dict
     }
 
 
+def normalize_plan_type(value: Any) -> str:
+    plan = str(value or "").strip().lower()
+    if not plan:
+        return ""
+    aliases = {
+        "chatgptplus": "plus",
+        "chatgpt_plus": "plus",
+        "chatgptplusplan": "plus",
+        "plusplan": "plus",
+        "plus_monthly": "plus",
+        "plus_yearly": "plus",
+        "go": "go",
+        "freeplan": "free",
+        "chatgptfreeplan": "free",
+        "teamplan": "team",
+        "proplan": "pro",
+        "enterpriseplan": "enterprise",
+    }
+    return aliases.get(plan, plan)
+
+
+def extract_plan_type_from_token(token: str) -> str:
+    claims = _decode_access_token_claims(token)
+    if not claims:
+        return ""
+    auth = claims.get("https://api.openai.com/auth")
+    auth_payload = auth if isinstance(auth, dict) else {}
+    plan = str(
+        auth_payload.get("chatgpt_plan_type")
+        or auth_payload.get("plan_type")
+        or claims.get("chatgpt_plan_type")
+        or ""
+    ).strip().lower()
+    return normalize_plan_type(plan)
+
+
+def extract_plan_type_from_session_payload(payload: dict[str, Any] | None, token: str = "") -> str:
+    data = payload if isinstance(payload, dict) else {}
+    account = data.get("account") if isinstance(data.get("account"), dict) else {}
+    plan = normalize_plan_type(
+        account.get("planType")
+        or account.get("plan_type")
+        or data.get("planType")
+        or data.get("plan_type")
+    )
+    if plan:
+        return plan
+    token_value = str(token or access_token_from_state(data) or "").strip()
+    if token_value:
+        return extract_plan_type_from_token(token_value)
+    return ""
+
+
+def _plan_timestamp(*values: Any) -> str:
+    best = ""
+    for value in values:
+        text = str(value or "").strip()
+        if text and text > best:
+            best = text
+    return best
+
+
+def extract_plan_type_from_job(job: dict[str, Any], *, prefer_cached: bool = True) -> str:
+    candidates: list[tuple[str, str, str]] = []
+
+    def add_candidate(plan: Any, updated_at: Any, source: str) -> None:
+        normalized = normalize_plan_type(plan)
+        if not normalized:
+            return
+        candidates.append((normalized, _plan_timestamp(updated_at), source))
+
+    if prefer_cached:
+        add_candidate(job.get("planType"), job.get("planUpdatedAt"), "job_cache")
+
+    state_path = job_state_path(job)
+    if state_path.exists():
+        state = read_json(state_path, {})
+        if isinstance(state, dict):
+            summary = state.get("session_summary") if isinstance(state.get("session_summary"), dict) else {}
+            add_candidate(
+                summary.get("accountPlanType")
+                or summary.get("planType")
+                or summary.get("plan_type")
+                or summary.get("chatgpt_plan_type"),
+                summary.get("updatedAt") or state.get("session_access_token_updated_at"),
+                "session_summary",
+            )
+            token = access_token_from_state(state)
+            add_candidate(
+                extract_plan_type_from_token(token),
+                state.get("session_access_token_updated_at") or summary.get("updatedAt"),
+                "session_token",
+            )
+
+    credential = read_success_credential(job)
+    if isinstance(credential, dict):
+        add_candidate(
+            credential.get("chatgpt_plan_type") or credential.get("plan_type"),
+            credential.get("last_refresh") or credential.get("expired"),
+            "success_credential",
+        )
+        token = str(credential.get("access_token") or "").strip()
+        add_candidate(
+            extract_plan_type_from_token(token),
+            credential.get("last_refresh") or credential.get("expired"),
+            "success_token",
+        )
+
+    if not candidates:
+        return ""
+
+    # Prefer the newest observation. When timestamps tie, prefer non-free over free
+    # and prefer ChatGPT session sources over cached job fields.
+    source_rank = {
+        "session_summary": 4,
+        "session_token": 3,
+        "success_credential": 2,
+        "success_token": 2,
+        "job_cache": 1,
+    }
+
+    def sort_key(item: tuple[str, str, str]) -> tuple:
+        plan, updated_at, source = item
+        return (
+            updated_at or "",
+            1 if plan not in {"free", "unknown"} else 0,
+            source_rank.get(source, 0),
+        )
+
+    plan, _updated_at, _source = max(candidates, key=sort_key)
+    return plan
+
+
+def build_session_summary(session_payload: dict[str, Any], *, token: str = "", source: str = "") -> dict[str, Any]:
+    data = session_payload if isinstance(session_payload, dict) else {}
+    token_value = str(token or access_token_from_state(data) or "").strip()
+    account = data.get("account") if isinstance(data.get("account"), dict) else {}
+    user = data.get("user") if isinstance(data.get("user"), dict) else {}
+    plan = extract_plan_type_from_session_payload(data, token_value)
+    account_id = str(
+        account.get("id")
+        or account.get("accountId")
+        or account.get("account_id")
+        or ""
+    ).strip()
+    structure = str(account.get("structure") or data.get("structure") or "").strip().lower()
+    return {
+        "updatedAt": utc_now(),
+        "httpStatus": 200,
+        "error": "",
+        "source": str(source or "auth_session"),
+        "accessTokenPresent": bool(token_value),
+        "accessTokenLength": len(token_value),
+        "accountPlanType": plan,
+        "accountStructure": structure,
+        "accountId": account_id,
+        "accountIdPresent": bool(account_id),
+        "hasUser": bool(user or account),
+        "hasAccount": bool(account),
+        "hasSessionTokenField": bool(token_value or data.get("sessionToken") or data.get("authProvider")),
+        "hasAuthProvider": bool(data.get("authProvider") or data.get("auth_provider")),
+        "hasExpires": bool(data.get("expires") or data.get("sessionExpires") or data.get("exp")),
+    }
+
+
 def _path_within(path: Path, root: Path) -> bool:
     try:
         path.resolve(strict=False).relative_to(root.resolve(strict=False))
@@ -1221,11 +1386,21 @@ def ensure_job_metadata() -> None:
                 "rtPresent": False,
                 "rtError": "",
                 "rtUpdatedAt": "",
+                "note": "",
+                "group": "",
+                "archived": False,
+                "planType": "",
+                "planUpdatedAt": "",
             }
             for key, value in phone_defaults.items():
                 if key not in job:
                     job[key] = value
                     changed = True
+            plan = extract_plan_type_from_job(job, prefer_cached=False)
+            if plan and normalize_plan_type(job.get("planType")) != plan:
+                job["planType"] = plan
+                job["planUpdatedAt"] = str(job.get("planUpdatedAt") or utc_now())
+                changed = True
             full_name = str(job.get("fullName") or "").strip()
             if str(job.get("registrationStatus") or "") != "registered":
                 if not full_name or full_name.casefold() in used_names:
@@ -1283,8 +1458,55 @@ def public_job(job: dict[str, Any]) -> dict[str, Any]:
     has_rt = success_credential_has_rt(read_success_credential(job))
     clean["rtPresent"] = bool(clean.get("rtPresent") or has_rt)
     clean["rtStatus"] = str(clean.get("rtStatus") or ("available" if has_rt else "missing"))
+    clean["note"] = str(clean.get("note") or "")
+    clean["group"] = str(clean.get("group") or "").strip()
+    clean["archived"] = bool(clean.get("archived"))
+    plan = extract_plan_type_from_job(job, prefer_cached=False) or normalize_plan_type(clean.get("planType"))
+    clean["planType"] = plan
+    clean["planUpdatedAt"] = str(clean.get("planUpdatedAt") or "")
     clean.pop("successCredentialPath", None)
     return clean
+
+
+def normalize_group_name(value: Any) -> str:
+    text = str(value or "").strip()
+    text = re.sub(r"\s+", " ", text)
+    return text[:40]
+
+
+def update_jobs_meta(ids: list[str], *, changes: dict[str, Any]) -> dict[str, Any]:
+    requested = [str(value).strip() for value in ids if str(value).strip()]
+    if not requested:
+        raise ValueError("ids must be a non-empty array")
+    allowed = {}
+    if "note" in changes:
+        allowed["note"] = str(changes.get("note") or "")[:200]
+    if "group" in changes:
+        allowed["group"] = normalize_group_name(changes.get("group"))
+    if "archived" in changes:
+        allowed["archived"] = bool(changes.get("archived"))
+    if not allowed:
+        raise ValueError("no supported fields to update")
+    updated = 0
+    missing: list[str] = []
+    with JOBS_LOCK:
+        rows = load_jobs()
+        by_id = {str(job.get("id") or ""): job for job in rows}
+        for job_id in requested:
+            job = by_id.get(job_id)
+            if not job:
+                missing.append(job_id)
+                continue
+            job.update(allowed)
+            job["updatedAt"] = utc_now()
+            updated += 1
+        if updated:
+            save_jobs(rows)
+    append_audit(
+        "jobs_meta_updated",
+        detail=f"count={updated} fields={','.join(sorted(allowed.keys()))}",
+    )
+    return {"ok": True, "updated": updated, "missing": missing, "fields": allowed}
 
 
 def _known_secrets(job: dict[str, Any] | None) -> list[str]:
@@ -1847,6 +2069,11 @@ def import_jobs(payload: dict[str, Any]) -> dict[str, Any]:
                     "rtPresent": False,
                     "rtError": "",
                     "rtUpdatedAt": "",
+                    "note": "",
+                    "group": "",
+                    "archived": False,
+                    "planType": "",
+                    "planUpdatedAt": "",
                     "createdAt": now,
                     "updatedAt": now,
                     "startedTs": 0,
@@ -2161,6 +2388,8 @@ def persist_access_token(
     *,
     source: str,
     replacement_state: dict[str, Any] | None = None,
+    session_payload: dict[str, Any] | None = None,
+    plan_type: str = "",
 ) -> dict[str, Any]:
     value = str(token or "").strip()
     if not value:
@@ -2180,10 +2409,21 @@ def persist_access_token(
     payload["session_access_token_exp"] = int(metadata.get("expiresAtEpoch") or 0)
     payload["session_access_token_expires_at"] = str(metadata.get("expiresAt") or "")
     payload.setdefault("email", str(job.get("email") or ""))
+    plan = normalize_plan_type(plan_type)
+    if isinstance(session_payload, dict) and session_payload:
+        summary = build_session_summary(session_payload, token=value, source=source)
+        payload["session_summary"] = summary
+        plan = plan or normalize_plan_type(summary.get("accountPlanType"))
+    if not plan:
+        existing_summary = payload.get("session_summary") if isinstance(payload.get("session_summary"), dict) else {}
+        plan = normalize_plan_type(existing_summary.get("accountPlanType")) or extract_plan_type_from_token(value)
     write_json_atomic(state_path, payload)
     at_path = job_at_path(job)
     write_text_atomic(at_path, value)
     fields = at_job_fields(value, updated_at=updated_at, source=source)
+    if plan:
+        fields["planType"] = plan
+        fields["planUpdatedAt"] = updated_at
     update_job(
         str(job.get("id") or ""),
         **fields,
@@ -2204,15 +2444,24 @@ def refresh_access_token_from_session(job: dict[str, Any], settings: dict[str, A
     )
     if not cookie_header:
         raise RuntimeError("登录态中没有可用的 ChatGPT cookies")
-    token = read_access_token_via_cookie_header(
+    session_payload = read_auth_session_via_cookie_header(
         cookie_header=cookie_header,
         oai_device_id=try_read_oai_did_from_storage_state(str(state_path)),
         timeout_ms=60_000,
         proxy=str(settings.get("proxy") or "").strip() or None,
     )
+    if not isinstance(session_payload, dict) or not session_payload:
+        raise RuntimeError("现有会话未返回 auth/session")
+    token = access_token_from_state(session_payload)
     if not token:
         raise RuntimeError("现有会话未返回 access token")
-    persist_access_token(job, token, source="session_refresh")
+    persist_access_token(
+        job,
+        token,
+        source="session_refresh",
+        session_payload=session_payload,
+        plan_type=extract_plan_type_from_session_payload(session_payload, token),
+    )
     return token
 
 
@@ -2286,12 +2535,25 @@ def fetch_full_session(job: dict[str, Any], settings: dict[str, Any]) -> dict[st
         if session_email and session_email.casefold() != email_value.strip().casefold():
             raise RuntimeError("Session 账号与当前任务不匹配")
         latest_job = get_job(job_id) or job
-        persist_access_token(latest_job, token, source="full_session")
+        persist_access_token(
+            latest_job,
+            token,
+            source="full_session",
+            session_payload=session_payload if isinstance(session_payload, dict) else None,
+            plan_type=extract_plan_type_from_session_payload(
+                session_payload if isinstance(session_payload, dict) else {},
+                token,
+            ),
+        )
         return {
             "ok": True,
             "source": "https://chatgpt.com/api/auth/session",
             "fetchedAt": utc_now(),
             "session": session_payload,
+            "planType": extract_plan_type_from_session_payload(
+                session_payload if isinstance(session_payload, dict) else {},
+                token,
+            ),
         }
 
 
@@ -4140,26 +4402,45 @@ def recover_interrupted_jobs() -> None:
 def state_payload() -> dict[str, Any]:
     with JOBS_LOCK:
         jobs = [public_job(job) for job in load_jobs()]
+    active_jobs = [job for job in jobs if not bool(job.get("archived"))]
+    archived_jobs = [job for job in jobs if bool(job.get("archived"))]
     counts = {
         "total": len(jobs),
-        "queued": sum(1 for job in jobs if job.get("status") == "queued"),
+        "active": len(active_jobs),
+        "archived": len(archived_jobs),
+        "queued": sum(1 for job in active_jobs if job.get("status") == "queued"),
         "running": sum(
             1
-            for job in jobs
+            for job in active_jobs
             if job.get("status") in {"registering", "session_recovering", "mfa_enrolling"} or job.get("atStatus") == "refreshing"
             or job.get("phoneStatus") in {"phone_queued", "phone_binding"}
         ),
-        "ready": sum(1 for job in jobs if job.get("status") == "ready"),
-        "failed": sum(1 for job in jobs if str(job.get("status") or "").endswith("failed") or job.get("status") == "mfa_secret_missing"),
+        "ready": sum(1 for job in active_jobs if job.get("status") == "ready"),
+        "failed": sum(1 for job in active_jobs if str(job.get("status") or "").endswith("failed") or job.get("status") == "mfa_secret_missing"),
     }
     phone_counts = {
-        "unknown": sum(1 for job in jobs if job.get("phoneStatus") == "phone_unknown"),
-        "queued": sum(1 for job in jobs if job.get("phoneStatus") == "phone_queued"),
-        "binding": sum(1 for job in jobs if job.get("phoneStatus") == "phone_binding"),
-        "bound": sum(1 for job in jobs if job.get("phoneStatus") == "phone_bound"),
-        "failed": sum(1 for job in jobs if job.get("phoneStatus") == "phone_failed"),
-        "stopped": sum(1 for job in jobs if job.get("phoneStatus") == "phone_stopped"),
+        "unknown": sum(1 for job in active_jobs if job.get("phoneStatus") == "phone_unknown"),
+        "queued": sum(1 for job in active_jobs if job.get("phoneStatus") == "phone_queued"),
+        "binding": sum(1 for job in active_jobs if job.get("phoneStatus") == "phone_binding"),
+        "bound": sum(1 for job in active_jobs if job.get("phoneStatus") == "phone_bound"),
+        "failed": sum(1 for job in active_jobs if job.get("phoneStatus") == "phone_failed"),
+        "stopped": sum(1 for job in active_jobs if job.get("phoneStatus") == "phone_stopped"),
     }
+    group_counts: dict[str, int] = {}
+    plan_counts: dict[str, int] = {}
+    for job in jobs:
+        group_name = str(job.get("group") or "").strip() or "未分组"
+        group_counts[group_name] = int(group_counts.get(group_name) or 0) + 1
+        plan_name = str(job.get("planType") or "").strip().lower() or "unknown"
+        plan_counts[plan_name] = int(plan_counts.get(plan_name) or 0) + 1
+    groups = [
+        {"name": name, "count": count}
+        for name, count in sorted(group_counts.items(), key=lambda item: (item[0] == "未分组", item[0].lower()))
+    ]
+    plans = [
+        {"name": name, "count": count}
+        for name, count in sorted(plan_counts.items(), key=lambda item: (-item[1], item[0]))
+    ]
     with RUNTIME_LOCK:
         runtime = {
             "running": bool(RUNTIME["running"]),
@@ -4183,6 +4464,8 @@ def state_payload() -> dict[str, Any]:
         "jobs": jobs,
         "counts": counts,
         "phoneCounts": phone_counts,
+        "groups": groups,
+        "plans": plans,
         "settings": public_settings(),
         "runtime": runtime,
     }
@@ -4673,6 +4956,14 @@ class Handler(SimpleHTTPRequestHandler):
                 except RuntimeError as error:
                     self.send_json(409, {"ok": False, "error": str(error)})
                     return
+                self.send_json(200, result)
+                return
+            if self.path == "/api/jobs/meta":
+                body = self.read_body()
+                ids = body.get("ids")
+                if not isinstance(ids, list):
+                    raise ValueError("ids 必须是数组")
+                result = update_jobs_meta([str(value) for value in ids], changes=body)
                 self.send_json(200, result)
                 return
             self.send_json(404, {"ok": False, "error": "接口不存在"})
