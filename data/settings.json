@@ -1,0 +1,35 @@
+{
+  "concurrency": 1,
+  "registerTimeoutSeconds": 360,
+  "otpTimeoutSeconds": 180,
+  "otpIntervalSeconds": 2,
+  "proxy": "",
+  "proxyPool": [
+    "socks5h://9wmz56345-region-JP-sid-YAS01a-t-5:wpzfqjnw@us.1024proxy.io:3000",
+    "socks5h://9wmz56345-region-JP-sid-YAS02b-t-5:wpzfqjnw@us.1024proxy.io:3000",
+    "socks5h://9wmz56345-region-JP-sid-YAS03c-t-5:wpzfqjnw@us.1024proxy.io:3000",
+    "socks5h://9wmz56345-region-JP-sid-YAS04d-t-5:wpzfqjnw@us.1024proxy.io:3000"
+  ],
+  "proxyStrategy": "sticky",
+  "trace": false,
+  "autoEnableMfaAfterRegistration": true,
+  "smsProvider": "herosms",
+  "smsApiKey": "3870fb1ff2f273db46A0f4A64beA50bc",
+  "smsCountry": "7",
+  "smsService": "dr",
+  "smsMaxPrice": 0.5,
+  "smsReusePhone": false,
+  "smsPhoneSuccessMax": 3,
+  "smsAutoCountry": true,
+  "smsAllowedCountries": [
+    "7",
+    "6",
+    "4",
+    "10"
+  ],
+  "smsAutoMinStock": 3,
+  "smsAutoMaxPrice": 0.5,
+  "smsStrictWhitelist": false,
+  "smsMaxPhoneAttempts": 6,
+  "smsPerPhoneTimeout": 120
+}

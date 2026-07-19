@@ -1,0 +1,10 @@
+{
+  "sessionId": "ZfThdp5xvow460p6GS5mHcQb",
+  "jobId": "1784303463733-32576e76",
+  "phase": "stopped",
+  "active": false,
+  "attemptId": 3,
+  "phoneMasked": "+60***1380",
+  "error": "phone binding stopped",
+  "updatedAtEpoch": 1784470992.7142894
+}

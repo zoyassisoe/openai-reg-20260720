@@ -1,0 +1,10 @@
+{
+  "sessionId": "OAXcw2VCJfS2lF-HrT6AYtl1",
+  "jobId": "1784023268693-33f78f5e",
+  "phase": "failed",
+  "active": false,
+  "attemptId": 0,
+  "phoneMasked": "",
+  "error": "绑定手机号失败：http_auth_otp_failed: email OTP submit failed: account_deactivated",
+  "updatedAtEpoch": 1784309968.6338382
+}

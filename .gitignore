@@ -1,5 +1,4 @@
 ﻿.env
-data/
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -7,10 +6,7 @@ __pycache__/
 htmlcov/
 *.log
 .DS_Store
-exports/
 exports_from_container/
-rt_bound*.txt
-ats_today.txt
 tmp_*.py
 .claude/
 .agents/

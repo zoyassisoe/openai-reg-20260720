@@ -1,0 +1,43 @@
+{
+  "type": "chatgpt_auth_session_snapshot",
+  "source": "https://chatgpt.com/api/auth/session",
+  "status": 200,
+  "error": "session 响应缺少 accessToken",
+  "updated_at": "2026-07-16T15:22:22.645800+00:00",
+  "accessTokenPresent": false,
+  "accessTokenLen": 0,
+  "sessionSummary": {
+    "updatedAt": "2026-07-16T15:22:22.645758+00:00",
+    "httpStatus": 200,
+    "error": "session 响应缺少 accessToken",
+    "topLevelKeys": [
+      "WARNING_BANNER"
+    ],
+    "topLevelKeyCount": 1,
+    "accessTokenPresent": false,
+    "accessTokenLength": 0,
+    "accountPlanType": "",
+    "accountStructure": "",
+    "accountId": "",
+    "accountIdPresent": false,
+    "hasUser": false,
+    "hasAccount": false,
+    "hasWorkspaces": false,
+    "workspaceCount": 0,
+    "hasAccounts": false,
+    "accountsCount": 0,
+    "hasSessionTokenField": false,
+    "hasAuthProvider": false,
+    "hasExpires": false,
+    "warningBannerOnly": false,
+    "selectedWorkspaceId": "",
+    "selectedWorkspaceName": "",
+    "selectedWorkspaceNonPersonal": false,
+    "nonPersonalWorkspaceCount": 0,
+    "nonPersonalAccountCount": 0,
+    "nonPersonalSeen": false
+  },
+  "session": {
+    "WARNING_BANNER": "!!!!!!!!!!!!!!!!!!!! DO NOT SHARE ANY PART OF THE INFORMATION YOU SEE HERE. THIS INFORMATION IS SENSITIVE AND CAN GRANT ACCESS TO YOUR ACCOUNT. SHARING THIS INFORMATION IS LIKE SHARING YOUR PASSWORD. !!!!!!!!!!!!!!!!!!!!"
+  }
+}
