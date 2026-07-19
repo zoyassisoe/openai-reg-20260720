@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>账号操作台</title>
+  <link rel="stylesheet" href="styles.css?v=10">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand-block">
+      <span class="brand-mark">R2</span>
+      <div>
+        <h1>账号操作台</h1>
+        <p>Email Registration · TOTP · Phone</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span id="serviceState" class="service-state"><i></i>正在连接</span>
+      <button id="startBtn" class="button primary" type="button" title="执行邮箱注册并开启 TOTP 2FA"><span aria-hidden="true">▶</span> 注册 + 2FA</button>
+      <button id="stopBtn" class="button danger" type="button" title="停止当前批次"><span aria-hidden="true">■</span> 停止</button>
+    </div>
+  </header>
+
+  <section class="metrics" aria-label="任务统计">
+    <div><strong id="totalCount">0</strong><span>任务总数</span></div>
+    <div><strong id="queuedCount">0</strong><span>等待运行</span></div>
+    <div><strong id="runningCount">0</strong><span>处理中</span></div>
+    <div><strong id="readyCount">0</strong><span>已完成</span></div>
+    <div><strong id="failedCount">0</strong><span>需处理</span></div>
+  </section>
+
+  <main class="workspace">
+    <section class="intake-section" aria-labelledby="intakeTitle">
+      <div class="section-heading">
+        <div>
+          <span class="section-index">01</span>
+          <h2 id="intakeTitle">账号录入</h2>
+        </div>
+        <div class="segmented" role="radiogroup" aria-label="取码方式">
+          <label><input type="radio" name="otpMode" value="api" checked><span>API URL</span></label>
+          <label><input type="radio" name="otpMode" value="imap"><span>IMAP</span></label>
+          <label><input type="radio" name="otpMode" value="outlook_oauth"><span>Outlook 令牌</span></label>
+        </div>
+      </div>
+
+      <div class="intake-grid">
+        <div class="import-column">
+          <label class="field-label" for="importText">批量账号</label>
+          <textarea id="importText" spellcheck="false" placeholder="email@example.com----https://mail-api.example/latest"></textarea>
+          <div class="inline-actions">
+            <input id="fileInput" type="file" accept=".csv,.txt" hidden>
+            <button id="fileBtn" class="button secondary" type="button">选择 CSV</button>
+            <span id="fileName" class="muted-text">未选择文件</span>
+          </div>
+        </div>
+
+        <div class="provider-column">
+          <fieldset id="apiFields" class="provider-fields">
+            <legend>接码 URL（GET）默认值</legend>
+            <label>取码 URL<input id="apiUrl" type="url" autocomplete="off" placeholder="https://...?email={email}"></label>
+          </fieldset>
+
+          <fieldset id="imapFields" class="provider-fields" hidden>
+            <legend>IMAP 默认值</legend>
+            <div class="field-pair wide-first">
+              <label>主机<input id="imapHost" autocomplete="off" placeholder="imap.example.com"></label>
+              <label>端口<input id="imapPort" type="number" min="1" max="65535" value="993"></label>
+            </div>
+            <label>邮箱用户名<input id="imapUser" autocomplete="off"></label>
+            <label>邮箱密码<input id="imapPassword" type="password" autocomplete="new-password"></label>
+            <div class="field-pair wide-first">
+              <label>文件夹<input id="imapFolder" value="Inbox" autocomplete="off"></label>
+              <label>最近邮件<input id="imapLatestN" type="number" min="1" max="500" value="80"></label>
+            </div>
+          </fieldset>
+
+          <fieldset id="outlookFields" class="provider-fields" hidden>
+            <legend>Outlook OAuth 默认值</legend>
+            <label>邮箱用户名<input id="outlookUser" autocomplete="off"></label>
+            <label>Client ID<input id="outlookClientId" autocomplete="off"></label>
+            <label>Refresh Token<input id="outlookRefreshToken" class="token-input" type="password" autocomplete="new-password" spellcheck="false"></label>
+            <div class="field-pair wide-first">
+              <label>主机<input id="outlookHost" value="outlook.office365.com" autocomplete="off"></label>
+              <label>端口<input id="outlookPort" type="number" min="1" max="65535" value="993"></label>
+            </div>
+            <div class="field-pair wide-first">
+              <label>文件夹<input id="outlookFolder" value="INBOX" autocomplete="off"></label>
+              <label>最近邮件<input id="outlookLatestN" type="number" min="1" max="500" value="80"></label>
+            </div>
+            <label class="toggle-row"><input id="pop3Fallback" type="checkbox" checked><span>IMAP 失败时尝试 POP3 OAuth</span></label>
+          </fieldset>
+        </div>
+      </div>
+
+      <details class="advanced-account">
+        <summary>账号资料默认值</summary>
+        <div class="field-triple">
+          <label>账号密码<input id="accountPassword" type="password" autocomplete="new-password" placeholder="留空自动生成"></label>
+          <label>姓名<input id="fullName" autocomplete="off" placeholder="留空自动生成"></label>
+          <label>生日<input id="birthDate" type="date"></label>
+        </div>
+      </details>
+
+      <div class="section-footer">
+        <span id="importResult" class="status-message"></span>
+        <div class="inline-actions">
+          <button id="testSourceBtn" class="button secondary" type="button">测试取码源</button>
+          <button id="importBtn" class="button primary" type="button">加入队列</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="sms-section" aria-labelledby="smsTitle">
+      <div class="section-heading compact">
+        <div><span class="section-index">02</span><h2 id="smsTitle">手机接码</h2></div>
+      </div>
+      <form id="smsSettingsForm" class="sms-panel-form">
+<details class="sms-settings" open>
+          <summary>手机接码（注册完成后绑定手机号）</summary>
+          <div class="sms-settings-body">
+            <label>接码服务
+              <select name="smsProvider" id="smsProvider">
+                <option value="">关闭</option>
+                <option value="smsbower">SmsBower</option>
+                <option value="herosms">HeroSMS</option>
+              </select>
+            </label>
+            <label>API Key<input name="smsApiKey" id="smsApiKey" type="password" autocomplete="new-password" spellcheck="false"></label>
+            <div class="field-pair">
+              <label>默认国家
+                <select name="smsCountry" id="smsCountry"></select>
+              </label>
+              <label>服务代码<input name="smsService" id="smsService" value="dr" autocomplete="off"></label>
+            </div>
+            <div class="field-pair">
+              <label>最高单价（留空不限）<input name="smsMaxPrice" id="smsMaxPrice" type="number" min="0" step="0.01" placeholder="不限价"></label>
+              <label>同号成功复用上限<input name="smsPhoneSuccessMax" id="smsPhoneSuccessMax" type="number" min="0" max="10" value="3"></label>
+            </div>
+            <label class="toggle-row"><input name="smsReusePhone" id="smsReusePhone" type="checkbox"><span>启用号码复用（SmsBower）</span></label>
+            <fieldset class="sms-fieldset">
+              <legend>自动选择最优国家</legend>
+              <label class="toggle-row"><input name="smsAutoCountry" id="smsAutoCountry" type="checkbox"><span>启用自动选国家（按价格 + 库存）</span></label>
+              <div class="field-pair">
+                <label>最低库存<input name="smsAutoMinStock" id="smsAutoMinStock" type="number" min="1" value="20"></label>
+                <label>自动选国最高单价<input name="smsAutoMaxPrice" id="smsAutoMaxPrice" type="number" min="0" step="0.01" placeholder="0=不限"></label>
+              </div>
+              <label class="toggle-row"><input name="smsStrictWhitelist" id="smsStrictWhitelist" type="checkbox"><span>严格白名单（仅 OpenAI SMS 稳妥国家）</span></label>
+              <label>允许使用的国家 <small class="muted-text">多选；空=不限制</small></label>
+              <input type="text" id="smsCountrySearch" class="sms-country-search" placeholder="搜索国家名称或 ID..." autocomplete="off">
+              <div id="smsAllowedCountriesBox" class="sms-allowed-box"><em>加载中...</em></div>
+              <div class="sms-allowed-actions">
+                <button type="button" id="btnClearAllowedCountries" class="button secondary">清空</button>
+                <span id="smsAllowedCountryCount" class="muted-text">已选 0 个国家</span>
+              </div>
+            </fieldset>
+            <fieldset class="sms-fieldset">
+              <legend>失败重试策略</legend>
+              <div class="field-pair">
+                <label>最多换号次数<input name="smsMaxPhoneAttempts" id="smsMaxPhoneAttempts" type="number" min="0" max="20" placeholder="0=平台默认"></label>
+                <label>单号等待秒数<input name="smsPerPhoneTimeout" id="smsPerPhoneTimeout" type="number" min="40" max="600" value="80"></label>
+              </div>
+              <p>仅在你主动执行后续绑定时租号。自动选国会从允许列表里按价格/库存挑号。</p>
+            </fieldset>
+            <div class="sms-actions">
+              <button type="button" id="btnTestSms" class="button secondary">测试余额</button>
+              <span id="smsCfgResult" class="muted-text" aria-live="polite"></span>
+            </div>
+          </div>
+        </details>
+        <div class="section-footer">
+          <span class="muted-text">注册完成后单独绑定手机号；自动选国会从允许列表挑号。</span>
+          <button class="button secondary" type="submit">保存接码配置</button>
+        </div>
+      </form>
+    </section>
+
+    <aside class="settings-section" aria-labelledby="settingsTitle">
+      <div class="section-heading compact">
+        <div><span class="section-index">03</span><h2 id="settingsTitle">运行参数</h2></div>
+      </div>
+      <form id="settingsForm">
+        <div class="field-pair">
+          <label>并发数<input name="concurrency" type="number" min="1" max="10" value="1"></label>
+          <label>注册超时<input name="registerTimeoutSeconds" type="number" min="60" max="1800" value="360"><span class="unit">秒</span></label>
+        </div>
+        <div class="field-pair">
+          <label>取码超时<input name="otpTimeoutSeconds" type="number" min="30" max="600" value="180"><span class="unit">秒</span></label>
+          <label>轮询间隔<input name="otpIntervalSeconds" type="number" min="1" max="15" value="2"><span class="unit">秒</span></label>
+        </div>
+        <label>代理选择策略
+          <select name="proxyStrategy">
+            <option value="round_robin">顺序轮询</option>
+            <option value="random">随机选择</option>
+            <option value="sticky">账号固定</option>
+            <option value="single">固定第一个</option>
+          </select>
+        </label>
+        <label>ChatGPT 单个代理<input name="proxy" autocomplete="off" placeholder="http://user:pass@host:port"></label>
+        <label>ChatGPT 代理 IP 池
+          <textarea id="proxyPool" name="proxyPool" class="proxy-pool-input" spellcheck="false" autocomplete="off" placeholder="每行一个代理"></textarea>
+        </label>
+        <div class="network-actions">
+          <button id="detectLocalBtn" class="button secondary" type="button">检测本机 IP</button>
+          <button id="testProxyPoolBtn" class="button secondary" type="button">检测代理出口 IP</button>
+          <button id="clearProxyPoolBtn" class="button secondary danger-command" type="button">清空代理池</button>
+        </div>
+        <div id="networkResult" class="network-result" aria-live="polite"><span>尚未检测网络出口</span></div>
+        <label class="toggle-row"><input name="trace" type="checkbox"><span>保存 Trace</span></label>
+        <p class="muted-text">注册任务固定包含 TOTP 2FA；手机号仍在注册完成后单独绑定。</p>
+        <button class="button secondary full-width" type="submit">保存运行参数</button>
+      </form>
+    </aside>
+
+    <section class="queue-section" aria-labelledby="queueTitle">
+      <div class="section-heading queue-heading">
+        <div><span class="section-index">04</span><h2 id="queueTitle">注册任务</h2></div>
+        <div class="queue-tools">
+          <input id="searchInput" class="search-input" type="search" placeholder="搜索邮箱">
+          <select id="statusFilter" aria-label="状态筛选">
+            <option value="">全部状态</option>
+            <option value="queued">等待运行</option>
+            <option value="running">处理中</option>
+            <option value="ready">已完成</option>
+            <option value="failed">需处理</option>
+          </select>
+          <select id="modeFilter" aria-label="取码方式筛选">
+            <option value="">全部取码方式</option>
+            <option value="api">API</option>
+            <option value="imap">IMAP</option>
+            <option value="outlook_oauth">Outlook</option>
+          </select>
+          <button id="refreshAtBtn" class="icon-command" type="button" title="为所选账号获取最新 AT" disabled><span aria-hidden="true">↻</span><span>刷新 AT</span></button>
+          <button id="bindPhoneSelectedBtn" class="icon-command" type="button" title="请先选择任务" disabled><span aria-hidden="true">☎</span><span id="bindPhoneSelectedLabel">批量绑手机</span></button>
+          <button id="deleteSelectedBtn" class="icon-command danger-command" type="button" title="删除所选任务" disabled><span aria-hidden="true">×</span><span>删除所选</span></button>
+          <button id="exportBtn" class="icon-command" type="button" title="导出 email、password、url、2FA Secret 和 AT"><span aria-hidden="true">↓</span><span>导出凭据</span></button>
+          <button id="exportRtBtn" class="icon-command" type="button" title="导出已绑号账号的 Sub2API RT JSON（默认）"><span aria-hidden="true">⤓</span><span id="exportRtLabel">导出 RT</span></button>
+          <button id="clearBtn" class="icon-command" type="button" title="清理失败、停止和中断任务"><span aria-hidden="true">×</span><span>清理异常</span></button>
+        </div>
+      </div>
+      <div class="table-shell">
+        <table>
+          <thead>
+            <tr>
+              <th class="check-cell"><input id="selectAll" type="checkbox" aria-label="全选当前页" title="全选当前页"></th>
+              <th>邮箱</th>
+              <th>取码方式</th>
+              <th>注册 + 2FA</th>
+              <th>AT</th>
+              <th>手机号</th>
+              <th>当前步骤</th>
+              <th>耗时</th>
+              <th>错误</th>
+              <th class="action-cell">操作</th>
+            </tr>
+          </thead>
+          <tbody id="jobRows"><tr><td colspan="10" class="empty-row">暂无任务</td></tr></tbody>
+        </table>
+      </div>
+      <div class="pagination-bar">
+        <span id="pageSummary">0 条任务</span>
+        <label>每页
+          <select id="pageSize" aria-label="每页任务数量">
+            <option value="10">10</option>
+            <option value="20" selected>20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+        </label>
+        <div class="pagination-controls">
+          <button id="firstPageBtn" type="button" title="第一页" aria-label="第一页">«</button>
+          <button id="prevPageBtn" type="button" title="上一页" aria-label="上一页">‹</button>
+          <span id="pageIndicator">1 / 1</span>
+          <button id="nextPageBtn" type="button" title="下一页" aria-label="下一页">›</button>
+          <button id="lastPageBtn" type="button" title="最后一页" aria-label="最后一页">»</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="log-section" aria-labelledby="logTitle">
+      <div class="section-heading compact">
+        <div><span class="section-index">05</span><h2 id="logTitle">运行日志</h2></div>
+        <button id="logToggle" class="icon-command" type="button">暂停滚动</button>
+      </div>
+      <div id="logBox" class="log-box" role="log"><div class="log-empty">等待任务日志</div></div>
+    </section>
+  </main>
+
+  <dialog id="credentialDialog" class="credential-dialog">
+    <form method="dialog" class="dialog-heading">
+      <div><span class="section-index">结果</span><h2 id="credentialEmail">账号凭据</h2></div>
+      <button class="close-button" value="close" aria-label="关闭" title="关闭">×</button>
+    </form>
+    <div class="credential-body">
+      <div class="credential-field">
+        <span>账号密码</span>
+        <code id="credentialPassword">-</code>
+        <button class="copy-button" type="button" data-copy="credentialPassword">复制</button>
+        <span>远端密码</span>
+        <code id="credentialPasswordStatus">-</code>
+        <span></span>
+      </div>
+      <div class="credential-field">
+        <span>TOTP Secret</span>
+        <code id="credentialSecret">-</code>
+        <button class="copy-button" type="button" data-copy="credentialSecret">复制</button>
+      </div>
+      <div class="credential-field access-token-field">
+        <span>Access Token (AT)</span>
+        <code id="credentialAccessToken">-</code>
+        <button class="copy-button" type="button" data-copy="credentialAccessToken">复制</button>
+      </div>
+      <div id="credentialSessionPanel" class="session-panel" hidden>
+        <div><span>完整 Session JSON</span><time id="credentialSessionFetchedAt">-</time></div>
+        <pre id="credentialSessionPreview">-</pre>
+      </div>
+      <div class="totp-code-block">
+        <div><span>当前验证码</span><strong id="credentialCode">------</strong></div>
+        <div class="countdown"><i id="countdownBar"></i></div>
+        <span id="countdownText">-- 秒</span>
+      </div>
+      <div class="credential-meta">
+        <span>Factor ID</span><code id="factorId">-</code>
+        <span>更新时间</span><time id="credentialUpdated">-</time>
+        <span>AT 来源</span><code id="credentialAtSource">-</code>
+        <span>AT 更新时间</span><time id="credentialAtUpdated">-</time>
+        <span>AT 过期时间</span><time id="credentialAtExpires">-</time>
+        <span>手机号状态</span><code id="credentialPhoneStatus" class="phone-status-value">未知</code>
+        <span>手机号</span><code id="credentialPhoneMasked">-</code>
+        <span>绑定时间</span><time id="credentialPhoneBoundAt">-</time>
+      </div>
+      <p id="credentialPhoneError" class="phone-binding-error" role="alert" hidden></p>
+      <section class="manual-phone-panel" aria-labelledby="manualPhoneTitle">
+        <div class="manual-phone-heading">
+          <strong id="manualPhoneTitle">手动绑定手机号</strong>
+          <span>失败后可直接换号，当前登录会话会继续保持</span>
+        </div>
+        <div class="manual-phone-row">
+          <input id="manualPhoneNumber" type="tel" autocomplete="tel" spellcheck="false" placeholder="+国家码手机号，例如 +66812345678">
+          <button id="sendManualPhoneOtpBtn" class="button secondary" type="button" disabled>发送验证码</button>
+        </div>
+        <div class="manual-phone-row">
+          <input id="manualPhoneOtp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="输入收到的验证码">
+          <button id="verifyManualPhoneOtpBtn" class="button primary" type="button" disabled>确认绑定</button>
+        </div>
+        <p id="manualPhoneStatus" class="manual-phone-status" aria-live="polite">填写完整手机号后发送验证码。</p>
+      </section>
+      <div class="dialog-actions">
+        <button id="refreshCredentialAtBtn" class="button secondary" type="button">获取最新 AT</button>
+        <button id="fetchCredentialSessionBtn" class="button secondary" type="button">获取完整 Session</button>
+        <button id="bindCredentialPhoneBtn" class="button secondary" type="button">自动接码绑定</button>
+        <button id="copyUriBtn" class="button secondary" type="button" disabled>复制 otpauth URI</button>
+        <button id="copyCredentialSessionBtn" class="button secondary" type="button" disabled>复制 Session JSON</button>
+        <button id="downloadCredentialSessionBtn" class="button secondary" type="button" disabled>下载 Session JSON</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="emailOtpDialog" class="credential-dialog otp-dialog">
+    <form method="dialog" class="dialog-heading">
+      <div><span class="section-index">邮箱</span><h2 id="emailOtpTitle">最新验证码</h2></div>
+      <button class="close-button" value="close" aria-label="关闭" title="关闭">×</button>
+    </form>
+    <div class="credential-body">
+      <div class="email-otp-code">
+        <span>邮箱验证码</span>
+        <strong id="emailOtpCode">------</strong>
+        <button class="copy-button" type="button" data-copy="emailOtpCode" disabled>复制</button>
+      </div>
+      <div class="credential-meta">
+        <span>取码来源</span><code id="emailOtpSource">-</code>
+        <span>获取时间</span><time id="emailOtpFetchedAt">-</time>
+        <span>请求耗时</span><time id="emailOtpElapsed">-</time>
+      </div>
+      <p id="emailOtpStatus" class="otp-status">正在读取最新邮件…</p>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js?v=10"></script>
+</body>
+</html>

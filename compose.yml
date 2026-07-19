@@ -1,0 +1,41 @@
+name: imap-registration-2fa
+
+services:
+  panel:
+    container_name: 2famima
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: imap-registration-2fa:local
+    restart: unless-stopped
+    init: true
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+      REG_2FA_HOST: 0.0.0.0
+      REG_2FA_PORT: 5188
+      REG_2FA_USERNAME: ${REG_2FA_USERNAME:-admin}
+      REG_2FA_PASSWORD: ${REG_2FA_PASSWORD:?set REG_2FA_PASSWORD in .env}
+      REG_2FA_DATA_DIR: /app/data
+      REG_2FA_RUN_DIR: /tmp/registration-2fa-runs
+      X9_ISOLATED_ROOT: /app/data/x9
+    ports:
+      - "127.0.0.1:${REG_2FA_PUBLIC_PORT:-5190}:5188"
+    volumes:
+      - registration_2fa_data:/app/data
+    tmpfs:
+      - /tmp:size=256m,mode=1777
+      - /app/X9-Free/_credential_toolcore/tmp:size=256m,mode=1777
+    networks:
+      - registration_2fa_net
+
+networks:
+  registration_2fa_net:
+    driver: bridge
+
+volumes:
+  registration_2fa_data:
